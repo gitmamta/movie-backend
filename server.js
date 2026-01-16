@@ -7,8 +7,8 @@ const Movie = require("./model/Movie");
 
 const app = express();
 
-app.use(cors({ origin: "https://movieappimd.netlify.app/" }));
-app.use(cors());
+app.use(cors({ origin: "https://movieappimd.netlify.app" }));
+// app.use(cors());
 
 
 
