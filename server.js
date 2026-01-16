@@ -6,6 +6,8 @@ require("dotenv").config();
 const Movie = require("./model/Movie");
 
 const app = express();
+
+app.use(cors({ origin: "https://movieappimd.netlify.app/" }));
 app.use(cors());
 
 
