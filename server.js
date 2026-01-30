@@ -7,11 +7,23 @@ const Movie = require("./model/Movie");
 
 const app = express();
 
-app.use(cors({ origin: "https://movieappimd.netlify.app" }));
+// app.use(cors({ origin: "https://movieappimd.netlify.app" }));
 // app.use(cors());
 
+// app.use(
+//   cors({
+//     origin: [
+//       "http://localhost:3000",
+//       "https://movieappimd.netlify.app",
+//     ],
+//   })
+// );
 
 
+app.use(cors({
+  origin: ["http://localhost:5173", "https://movieappimd.netlify.app"],
+  credentials: true
+}));
 
 
 // app.use(cors({ origin: "http://localhost:3000" }));
