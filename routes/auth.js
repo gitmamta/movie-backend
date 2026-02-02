@@ -8,7 +8,7 @@ dotenv.config();
 // -------------------- REGISTER --------------------
 router.post("/register", async (req, res) => {
   const { username, password, role } = req.body;
-  
+
   // Validate role
   const allowedRoles = ["USER", "ADMIN"];
   if (role && !allowedRoles.includes(role)) {
@@ -40,7 +40,6 @@ router.post("/login", async (req, res) => {
   try {
     const user = await User.findOne({ username });
     if (!user) {
-      // Avoid exposing which part failed
       return res.status(400).json({ message: "Invalid username or password" });
     }
 
@@ -56,7 +55,14 @@ router.post("/login", async (req, res) => {
       { expiresIn: "1d" }
     );
 
-    res.json({ token, role: user.role, username: user.username });
+    // ✅ Return token and user object
+    res.json({
+      token,
+      user: {
+        username: user.username,
+        role: user.role
+      }
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server error" });

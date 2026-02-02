@@ -1,23 +1,13 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const adminRouter=require("./routes/auth");
+const authRouter=require("./routes/auth");
 require("dotenv").config();
 const Movie = require("./model/Movie");
+const auth=require("./middleware/auth");
+const adminRouter=require("./routes/admin");
 
 const app = express();
-
-// app.use(cors({ origin: "https://movieappimd.netlify.app" }));
-// app.use(cors());
-
-// app.use(
-//   cors({
-//     origin: [
-//       "http://localhost:3000",
-//       "https://movieappimd.netlify.app",
-//     ],
-//   })
-// );
 
 
 app.use(cors({
@@ -34,7 +24,8 @@ app.use(express.urlencoded({ extended: true }));
 
 
 // then your routes
-app.use("/admin", adminRouter);
+app.use("/auth",authRouter);
+app.use("/admin",adminRouter);
 
 
 // -------------------- Routes --------------------
@@ -95,7 +86,7 @@ app.get("/movies/search", async (req, res) => {
 });
 
 // POST add movie
-app.post("/movies", async (req, res) => {
+app.post("/movies",adminRouter,async (req, res) => {
   try {
     const newMovie = new Movie(req.body);
     await newMovie.save();
@@ -107,7 +98,7 @@ app.post("/movies", async (req, res) => {
 });
 
 // PUT edit movie by _id
-app.put("/movies/:id", async (req, res) => {
+app.put("/movies/:id",auth('Admin'),async (req, res) => {
   try {
     const movie = await Movie.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!movie) return res.status(404).json({ message: "Movie not found" });
@@ -118,7 +109,7 @@ app.put("/movies/:id", async (req, res) => {
 });
 
 // DELETE movie by _id
-app.delete("/movies/:id", async (req, res) => {
+app.delete("/movies/:id", auth('Admin'),async (req, res) => {
   try {
     const movie = await Movie.findByIdAndDelete(req.params.id);
     if (!movie) return res.status(404).json({ message: "Movie not found" });
