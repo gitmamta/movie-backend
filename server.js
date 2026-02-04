@@ -86,7 +86,7 @@ app.get("/movies/search", async (req, res) => {
 });
 
 // POST add movie
-app.post("/movies",adminRouter,async (req, res) => {
+app.post("/movies",auth('Admin'),async (req, res) => {
   try {
     const newMovie = new Movie(req.body);
     await newMovie.save();
